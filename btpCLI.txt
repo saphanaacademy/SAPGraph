@@ -56,7 +56,11 @@ btp create security/role-collection "Graph Key User"
 -- obtain sap-graph <AppId>
 btp list security/role
 
-btp add security/role SAP_Graph_Key_User --to-role-collection "Graph Key User" --of-app sap-graph\!<AppId> --of-role-template SAP_Graph_Key_User
+Windows PowerShell:
+btp add security/role SAP_Graph_Key_User --to-role-collection "Graph Key User" --of-role-template SAP_Graph_Key_User --of-app sap-graph!<AppId>
+
+Bash:
+btp add security/role SAP_Graph_Key_User --to-role-collection "Graph Key User" --of-role-template SAP_Graph_Key_User --of-app sap-graph\!<AppId>
 
 btp list security/user
 btp get security/user <Email>
