@@ -6,40 +6,56 @@ https://tools.hana.ondemand.com/#cloud
 https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/7c6df2db6332419ea7a862191525377c.html
 
 btp help
+btp help list
+
+-- authentication
 btp login --url https://cpcli.cf.eu10.hana.ondemand.com --subdomain <GlobalSubdomain> --user <Email>
 btp logout
+
 btp --info
 
 -- subaccount
 btp create accounts/subaccount --global-account <GlobalSubdomain> --display-name <Subaccount> --region <Region> --subdomain <Subaccount> --used-for-production false --description <Subaccount>
+
 btp list accounts/subaccount
+
 btp target --subaccount <SubaccountId>
 
 -- entitlements
 btp assign accounts/entitlement --to-subaccount <SubaccountId> --for-service sap-graph --plan free --enable true
+
 btp list accounts/entitlement
 
 -- services
-btp help list
 btp list services/offering
 btp list services/plan
 
 -- SAP Graph
-btp create services/instance --name <Subaccount> --offering-name sap-graph --plan-name free --parameters "{\"xs-security\": {\"xsappname\": \"<Subaccount>\",\"oauth2-configuration\": {\"redirect-uris\": [\"http://localhost:*/**\"]}}}"
+
+Windows PowerShell:
+btp create services/instance --name <Subaccount> --offering-name sap-graph --plan-name free --parameters '{\"xs-security\": {\"xsappname\": \"<Subaccount>\", \"oauth2-configuration\": {\"redirect-uris\": [\"http://localhost:*/**\"]}}}'
+
+Bash:
+btp create services/instance --name <Subaccount> --offering-name sap-graph --plan-name free --parameters "{\"xs-security\": {\"xsappname\": \"<Subaccount>\", \"oauth2-configuration\": {\"redirect-uris\": [\"http://localhost:*/**\"]}}}"
+
 btp list services/instance
 btp get services/instance --name <Subaccount>
 
-btp update services/instance --name <Subaccount> --parameters "{\"xs-security\": {\"xsappname\": \"<Subaccount>\",\"oauth2-configuration\": {\"redirect-uris\": [\"http://localhost:*/**\"]}}}"
-btp get services/instance --name <Subaccount>
+Windows PowerShell:
+btp update services/instance --name <Subaccount> --parameters '{\"xs-security\": {\"xsappname\": \"<Subaccount>\", \"oauth2-configuration\": {\"redirect-uris\": [\"http://localhost:*/**\"]}}}'
+
+Bash:
+btp update services/instance --name <Subaccount> --parameters "{\"xs-security\": {\"xsappname\": \"<Subaccount>\", \"oauth2-configuration\": {\"redirect-uris\": [\"http://localhost:*/**\"]}}}"
 
 btp create services/binding --name <Subaccount>-creds --instance-name <Subaccount>
 
 btp --format json get services/bindings --name <Subaccount>-creds > <Subaccount>-creds.json
 
--- to view the sap-graph <AppId>
+btp create security/role-collection "Graph Key User"
+
+-- obtain sap-graph <AppId>
 btp list security/role
 
-btp create security/role-collection "Graph Key User"
 btp add security/role SAP_Graph_Key_User --to-role-collection "Graph Key User" --of-app sap-graph\!<AppId> --of-role-template SAP_Graph_Key_User
 
 btp list security/user
@@ -56,7 +72,13 @@ btp assign accounts/entitlement --to-subaccount <SubaccountId> --for-service APP
 btp list accounts/entitlement
 
 btp list accounts/available-environment
+
+Windows PowerShell:
+btp create accounts/environment-instance --display-name <Subaccount>-cf --environment cloudfoundry --service cloudfoundry --plan standard --parameters '{\"instance_name\":\"<Subaccount>\"}'
+
+Bash:
 btp create accounts/environment-instance --display-name <Subaccount>-cf --environment cloudfoundry --service cloudfoundry --plan standard --parameters "{\"instance_name\":\"<Subaccount>\"}"
+
 btp list accounts/environment-instance
 btp get accounts/environment-instance <EnvironmentId>
 -- labels contains <CFAPIEndpoint>
